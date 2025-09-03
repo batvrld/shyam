@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shyam's Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+      background: #00000000;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 255, 255, 0.096);
+      z-index: 0;
+    }
+
+    video#bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    header {
+  position: fixed;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.145);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  backdrop-filter: blur(12px); /* 👈 Add this line */
+  -webkit-backdrop-filter: blur(12px); /* For Safari */
+}
+
+    header h1 {
+      color: #ffffff;
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      color: #ffffff;
+      margin-left: 2rem;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: rgb(61, 242, 236);
+    }
+
+    section {
+      padding: 100px 10%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .home {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+
+    .home h2 {
+      font-size: 3rem;
+      color: #ffffff;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+      }
+      to {
+        text-shadow: 0 0 20px #00000000, 0 0 40px #ffffff;
+      }
+    }
+
+    .home p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      max-width: 600px;
+      color: #ccc;
+    }
+
+    .home button {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      background: #ffffff;
+      border: none;
+      color: #000;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #ffffff;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .home button:hover {
+      transform: scale(1.05);
+      background: #495152;
+    }
+
+    h3.section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .skills ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      list-style: none;
+    }
+
+    .skills li {
+      background: rgba(0, 247, 255, 0.05);
+      padding: 1rem;
+      border: 1px solid #ffffff;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transform-origin: center;
+    }
+
+    .skills li:hover {
+      transform: scale(1.1) rotate(1deg);
+      box-shadow: 0 0 20px #ffffff, inset 0 0 10px #ffffff;
+      background-color: rgba(0, 247, 255, 0.2);
+    }
+
+    .portfolio-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .portfolio-item {
+      background: #0000005b;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .portfolio-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ffffff;
+    }
+
+    .portfolio-item img {
+      width: 100%;
+      display: block;
+    }
+
+    .portfolio-item .info {
+      padding: 1rem;
+    }
+
+    .portfolio-item .info h4 {
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .contact input, .contact textarea {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #00000032;
+      border: 1px solid #ffffff;
+      border-radius: 5px;
+      color: #fff;
+    }
+
+    .contact button {
+      background: #ffffff;
+      color: #000;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ffffff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: transparent;
+      color: #aaa;
+    }
+    #bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    filter: blur(0px); /* 👈 Blur applied */
+    z-index: -1;
+  }
+  .nigga{
+    text-decoration: none;
+    text-align: center;
+    
+  }
+  .contact input::placeholder,
+.contact textarea::placeholder {
+  
+  color: #feffff; /* Change this to your desired color */
+  opacity: 1;
+}
+.profile-pic-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.profile-pic {
+  width: 180px;    /* Increase this value */
+  height: 180px;   /* Increase this value */
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgb(0, 215, 219);
+  box-shadow: 0 0 20px rgb(61, 242, 236);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 101;
+}
+.hamburger span {
+  height: 4px;
+  width: 100%;
+  background: #ffffff;
+  margin: 5px 0;
+  border-radius: 2px;
+  display: block;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  nav {
+    position: fixed;
+    top: 75px;
+    right: 0;
+    background: rgba(0, 234, 255, 0.284); /* More opaque for visible blur */
+    flex-direction: column;
+    align-items: flex-end;
+    width: 130px;
+    padding: 2rem 1.5rem;
+    gap: 1rem;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+    z-index: 100;
+    height: 100vh;
+    display: flex;
+    backdrop-filter: blur(160px);           /* Stronger blur */
+    -webkit-backdrop-filter: blur(160px);   /* Safari support */
+  }
+  nav.open {
+    transform: translateX(0);
+  }
+  nav a {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+  }
+}
+.typing-text {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-top: 1rem;
+  min-height: 2rem;
+}
+
+#typewriter {
+  border-right: 2px solid #fff;  /* blinking cursor */
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+/*social links*/
+.social-links {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.social-links a {
+  font-size: 1.5rem;
+  color: #fff;
+  background: rgba(0, 247, 255, 0.1);
+  border: 1px solid #fff;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+  text-decoration: none;   /* ✅ no underline */
+}
+
+
+.social-links a:hover {
+  transform: scale(1.2);
+  color: #09f7ff;
+  background: #fff;
+  box-shadow: 0 0 20px #fff;
+}
+/* Resume Button */
+/* Resume Button */
+.resume-btn {
+  margin-top: 1.5rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background: #fff;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #ffffff;
+  transition: transform 0.3s, background 0.3s;
+  display: block;
+  margin: 1.5rem auto; /* auto centers horizontally */
+}
+
+.resume-btn:hover {
+  transform: scale(1.05);
+  background: #ffffff;
+  color: #05e2ff;
+}
+
+/* Overlay styles */
+.overlay {
+  display: none;                 /* hidden by default */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px);
+}
+
+.overlay-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.resume-img {
+  max-height: 90vh;     /* take up 90% of screen height */
+  width: auto;          /* scale width automatically */
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00eeff;
+  display: block;
+  margin: 0 auto;       /* center horizontally */
+}
+
+@media (max-width: 768px) {
+  .resume-img {
+    max-width: 95%;   /* use more width on small screens */
+    max-height: 85vh; /* slightly less height for spacing */
+  }
+}
+/* Close button */
+/* Close button - desktop */
+.close-btn {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  background: rgb(0, 0, 0);
+  height: 40px;              /* fixed height */
+  width: 40px;               /* fixed width */
+  display: flex;             /* center the icon */
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ✅ Mobile adjustments */
+@media (max-width: 768px) {
+  .close-btn {
+    top: -60px;                /* place above resume */
+    left: 50%;                 /* start from center */
+    right: auto;               /* remove right positioning */
+    transform: translateX(-50%); /* perfectly center */
+    height: 50px;              /* bigger for thumb */
+    width: 50px;
+    font-size: 2.2rem;
+  }
+}
+
+/*cursor follower*/
+.cursor-follower {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: #04ffff;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s;
+  z-index: 9999;
+}
+  </style>
+</head>
+
+<body>
+  <div class="cursor-follower"></div>
+
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="chip.mp4" type="video/mp4">
+  </video>
+
+  <header>
+  <h1>SHYAM</h1>
+  <button class="hamburger" id="hamburger-btn" aria-label="Open navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#skills">My Skills</a>
+    <a href="#portfolio">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<section class="home" id="home">
+  <div class="profile-pic-container">
+    <img src="shyam.jpeg" alt="Shyam's Photo" class="profile-pic">
+  </div>
+  <h2>Hello, I'm Shyam</h2>
+  
+  <!-- Typing effect placeholder -->
+  <h3 class="typing-text"><span id="typewriter"></span></h3>
+  
+  <p style="color: rgb(255, 255, 255);">
+    I turn ideas into reality through design and code. Let’s build something amazing together.
+  </p>
+  <button id="resumeBtn" class="resume-btn">Resume</button>
+</section>
+
+
+
+ 
+  <section class="skills" id="skills">
+    <h3 class="section-title">My Skills</h3>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+      <li>React</li>
+      <li>Figma</li>
+      <li>Node.js</li>
+      <li>UI/UX Design</li>
+    </ul>
+  </section>
+
+  <section class="portfolio" id="portfolio">
+    <h3 class="section-title">Projects</h3>
+    <div class="portfolio-items">
+      <div class="portfolio-item">
+        <img src="Screenshot 2025-08-25 at 4.32.01 PM.png" alt="Project 2">
+        <div class="info">
+          <a href="https://www.skynetbee.com/" class="nigga"><h4>skynetbee.com</h4></a>
+          <p style="text-align: center; color: white;">this is my first project.<br>SkyneTBee Pvt Ltd develops tailored web and mobile applications—across platforms like iOS, Android, .NET, and robotics—prioritizing minimal costs, robust data security, AI integration, and exceptional support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+  <h3 class="section-title">Contact Me</h3>
+  <form>
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form><br>
+
+  <!-- Social Media Buttons -->
+  <div class="social-links">
+    <a href="https://www.instagram.com/batvrld/" target="_blank" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.linkedin.com/in/shyam-santhosh-27386a354/" target="_blank" aria-label="LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://wa.me/8667697886" target="_blank" aria-label="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+</section>
+<!-- Resume Overlay -->
+<div id="resumeOverlay" class="overlay">
+  <div class="overlay-content">
+    <span id="closeOverlay" class="close-btn">&times;</span>
+    <img src="resume.png" alt="My Resume" class="resume-img">
+  </div>
+</div>
+
+
+  <footer style="color: #ffffff;">
+    mail me at : skynetshyam＠gmail.com
+  </footer>
+
+  <script>
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(link.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+  <script>
+  // Slow down the video to half speed
+  document.addEventListener("DOMContentLoaded", function () {
+    const video = document.getElementById("bgVideo");
+    video.playbackRate = 1; // 0.5 = half speed, 1 = normal speed
+  });
+
+ 
+
+  const hamburger = document.getElementById('hamburger-btn');
+  const nav = document.querySelector('nav');
+  hamburger.addEventListener('click', () => {
+    nav.classList.toggle('open');
+  });
+  // Optional: close nav when a link is clicked (on mobile)
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+    });
+  });
+
+
+
+const words = ["Developer", "Designer", "Problem Solver", "Creator"];
+  let i = 0;        // word index
+  let j = 0;        // letter index
+  let currentWord = "";
+  let isDeleting = false;
+  const speed = 70; // typing speed
+
+  function type() {
+    currentWord = words[i];
+    const display = document.getElementById("typewriter");
+
+    if (isDeleting) {
+      display.textContent = currentWord.substring(0, j--);
+      if (j < 0) {
+        isDeleting = false;
+        i = (i + 1) % words.length; // move to next word
+      }
+    } else {
+      display.textContent = currentWord.substring(0, j++);
+      if (j > currentWord.length) {
+        isDeleting = true;
+        setTimeout(type, 1000); // pause before deleting
+        return;
+      }
+    }
+
+    setTimeout(type, isDeleting ? speed / 2 : speed);
+  }
+
+  document.addEventListener("DOMContentLoaded", type);
+</script>
+<script>
+  const resumeBtn = document.getElementById("resumeBtn");
+  const resumeOverlay = document.getElementById("resumeOverlay");
+  const closeOverlay = document.getElementById("closeOverlay");
+
+  resumeBtn.addEventListener("click", () => {
+    resumeOverlay.style.display = "flex";  // show overlay
+  });
+
+  closeOverlay.addEventListener("click", () => {
+    resumeOverlay.style.display = "none";  // hide overlay
+  });
+
+  // Optional: close when clicking outside image
+  resumeOverlay.addEventListener("click", (e) => {
+    if (e.target === resumeOverlay) {
+      resumeOverlay.style.display = "none";
+    }
+  });
+</script>
+
+
+<script>
+  const cursor = document.querySelector(".cursor-follower");
+  let mouseX = 0, mouseY = 0;
+  let followerX = 5, followerY = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    followerX += (mouseX - followerX) * 0.1; // smooth motion
+    followerY += (mouseY - followerY) * 0.1;
+    cursor.style.transform = `translate(${followerX - -20}px, ${followerY - 7.5}px)`;
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+
+</body>
+
+</html>
