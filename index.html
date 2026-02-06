@@ -889,6 +889,11 @@
         }, 1200);
 
         glitchText(messages[0]);
+        setTimeout(() => {
+  const pre = document.getElementById("preloader");
+  if (pre) pre.style.display = "none";
+}, 3000);
+
     </script>
 
     <div class="grid-line" style="left: 25vw;"></div>
