@@ -1026,8 +1026,15 @@
         gsap.registerPlugin(ScrollTrigger);
 
         // --- ANIMATIONS ---
-        window.onload = () => {
-            gsap.to("#preloader", { y: "-100%", duration: 1.2, ease: "power4.inOut" });
+        window.addEventListener("DOMContentLoaded", () => {
+  gsap.to("#preloader", {
+    y: "-100%",
+    duration: 1,
+    ease: "power4.inOut",
+    delay: 0.4
+  });
+});
+
 
             document.querySelectorAll('.reveal-text').forEach(el => {
                 const split = new SplitType(el, { types: 'lines' });
