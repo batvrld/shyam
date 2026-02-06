@@ -681,6 +681,82 @@
         .loader-text {
             animation: glitch 0.18s infinite;
         }
+
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            --btn-bg: #000;
+            --btn-text: #fff;
+            --btn-border: rgba(0, 0, 0, 0.15);
+            --btn-glow: rgba(0, 255, 213, 0.35);
+        }
+
+        [data-theme="dark"],
+        .dark {
+            --btn-bg: #fff;
+            --btn-text: #000;
+            --btn-border: rgba(255, 255, 255, 0.25);
+            --btn-glow: rgba(0, 255, 213, 0.45);
+        }
+
+        /* ===== VISIT SITE BUTTON ===== */
+        .visit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 14px 28px;
+            margin-top: 28px;
+
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+
+            color: var(--btn-text);
+            background: var(--btn-bg);
+
+            border-radius: 999px;
+            border: 1px solid var(--btn-border);
+
+            cursor: pointer;
+            text-decoration: none;
+
+            position: relative;
+            overflow: hidden;
+
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease,
+                color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        /* arrow = instant CTA recognition */
+        .visit-btn::after {
+            content: "↗";
+            font-size: 1rem;
+            opacity: 0.6;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        /* hover = cyberpunk hit */
+        .visit-btn:hover {
+            background: #00ffd5;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--btn-glow);
+        }
+
+        .visit-btn:hover::after {
+            transform: translateX(5px) translateY(-5px);
+            opacity: 1;
+        }
+
+        /* click feedback */
+        .visit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 18px var(--btn-glow);
+        }
     </style>
 
     <div id="cp-cursor">
@@ -880,7 +956,7 @@
             { title: "Radha Diamonds", tags: ["Jewelry", "Elegance"], desc: "A premium diamond jewelry boutique offering exquisite, handcrafted collections and timeless elegance for every occasion.", img: "rad.png", url: "https://rdvivaha.com/radhadiamonds/" },
             { title: "Lets Meat & Eat", tags: ["Culinary", "Hub"], desc: "The vibrant culinary hub of RD College, serving a diverse range of fresh flavors and hearty meals for students and staff.", img: "mae.png", url: "https://rdcollege.in/meetandeat" },
             { title: "Skipton Sports Flooring", tags: ["Industrial", "Flooring"], desc: "sports flooring organisation. Delivering high-quality, durable surfaces for gyms, courts, and sports facilities.", img: "skip.png", url: "https://www.skiptonsportsflooring.com/" },
-            { title: "Popeye Marines", tags: ["Maritime", "Solutions"], desc: "Leading maritime solutions provider specializing in advanced vessel design and construction.", img: "pop.png", url: "https://www.popeyemarines.com/" }
+            { title: "Popeye Marines", tags: ["Maritime", "Solutions"], desc: "Leading maritime solutions provider specializing in advanced vessel design and construction.", img: "p1.png", url: "https://www.popeyemarines.com/" }
         ];
 
         // --- RENDER PROJECTS ---
@@ -905,7 +981,7 @@
                                 </div>
                                 <p style="opacity: 0.7; font-weight: 300;">${p.desc}</p>
                             </div>
-                            <a href="${p.url}" target="_blank" class="visit-btn">Visit Site — ${displayIdx}</a>
+                            <a href="${p.url}" target="_blank" class="visit-btn">VISIT →</a>
                         </div>
                     </div>
                 </div>
