@@ -57,12 +57,22 @@
             --desktop-card-y: 26vh;
         }
 
-        [data-theme="dark"] {
+        /* Default Dark Mode Styles */
+        body[data-theme="dark"], body:not([data-theme="light"]) {
             --bg: #0D0D0D;
             --text: #F9F9F7;
             --accent: #FF4D5A;
             --line: rgba(249, 249, 247, 0.15);
             --nav-grey: #AAAAAA;
+        }
+
+        /* Explicit Light Mode Override */
+        body[data-theme="light"] {
+            --bg: #F9F9F7;
+            --text: #1A1A1A;
+            --accent: #E63946;
+            --line: rgba(26, 26, 26, 0.15);
+            --nav-grey: #666666;
         }
 
         @media (max-width: 768px) {
@@ -115,15 +125,6 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-        }
-
-        /* Shutter overlay for the exit animation */
-        .shutter {
-            position: absolute;
-            inset: 0;
-            background: #0d0d0d;
-            z-index: 10000;
-            display: none; /* Controlled via JS */
         }
 
         .loader-text {
@@ -230,9 +231,16 @@
             transition: transform 0.4s var(--ease);
         }
 
-        [data-theme="dark"] .toggle-thumb {
+        /* Thumb position for Dark Mode (Default) */
+        body[data-theme="dark"] .toggle-thumb, body:not([data-theme="light"]) .toggle-thumb {
             transform: translateY(150%);
             background: var(--accent);
+        }
+
+        /* Thumb position for Light Mode */
+        body[data-theme="light"] .toggle-thumb {
+            transform: translateY(0%);
+            background: var(--text);
         }
 
         main {
@@ -261,7 +269,7 @@
             width: var(--desktop-card-w);
             height: var(--desktop-card-h);
             transform: translate(var(--desktop-card-x), var(--desktop-card-y));
-            background: #E0E0E0;
+            background: #222;
             overflow: hidden;
             border: 1px solid var(--line);
             flex-shrink: 0;
@@ -321,7 +329,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 16/9;
-            background: #E0E0E0;
+            background: #222;
             overflow: hidden;
             border: 1px solid var(--line);
         }
@@ -356,21 +364,6 @@
             padding: 4px 10px;
             border: 1px solid var(--line);
             border-radius: 100px;
-        }
-
-        .visit-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-top: 40px;
-            position: relative;
-            width: fit-content;
         }
 
         .grid-line {
@@ -462,12 +455,6 @@
             }
         }
 
-        ::selection {
-            background: #00fff7;
-            color: #0a0a0a;
-            text-shadow: 1px 0 #ff003c, -1px 0 #00e5ff;
-        }
-
         /* ===== CURSOR ===== */
         @media (hover: hover) and (pointer: fine) {
             *, *::before, *::after, a, button, input, textarea, select, option, label {
@@ -555,17 +542,17 @@
         .loader-text::after { color: #00e5ff; transform: translate(-1px, 0); clip-path: inset(40% 0 0 0); }
 
         :root {
-            --btn-bg: #000;
-            --btn-text: #fff;
-            --btn-border: rgba(0, 0, 0, 0.15);
-            --btn-glow: rgba(0, 255, 213, 0.35);
-        }
-
-        [data-theme="dark"] {
             --btn-bg: #fff;
             --btn-text: #000;
             --btn-border: rgba(255, 255, 255, 0.25);
             --btn-glow: rgba(0, 255, 213, 0.45);
+        }
+
+        body[data-theme="light"] {
+            --btn-bg: #000;
+            --btn-text: #fff;
+            --btn-border: rgba(0, 0, 0, 0.15);
+            --btn-glow: rgba(0, 255, 213, 0.35);
         }
 
         .visit-btn {
@@ -587,8 +574,14 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+            width: 15.4vh;
         }
-
+        @media (max-width: 768px) {
+            .visit-btn {
+                width: 12.5vh;
+                padding: 12px 20px;
+            }
+        }
         .visit-btn::after {
             content: "↗";
             font-size: 1rem;
@@ -605,7 +598,7 @@
     </style>
 </head>
 
-<body>
+<body data-theme="dark">
     <div id="cp-cursor">
         <div class="cursor-dot"></div>
         <div class="cursor-ring"></div>
@@ -777,7 +770,7 @@
             const themeBtn = document.getElementById('theme-toggle');
             themeBtn.onclick = () => {
                 const current = document.body.getAttribute('data-theme');
-                document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+                document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
             };
 
             if (window.lucide) lucide.createIcons();
@@ -785,37 +778,36 @@
 
         // HANDLE EXIT (Force 5 Seconds)
         window.addEventListener('load', () => {
-    const startTime = Date.now();
-    const minLoadTime = 5000;
+            const startTime = Date.now();
+            const minLoadTime = 5000;
 
-    const finishLoading = () => {
-        const remainingTime = Math.max(0, minLoadTime - (Date.now() - startTime));
+            const finishLoading = () => {
+                const remainingTime = Math.max(0, minLoadTime - (Date.now() - startTime));
 
-        setTimeout(() => {
-            clearInterval(msgInterval);
-            glitchEffect("ACCESS GRANTED");
+                setTimeout(() => {
+                    clearInterval(msgInterval);
+                    glitchEffect("ACCESS GRANTED");
 
-            if (!window.gsap) {
-                // fallback — no GSAP, just remove preloader
-                document.getElementById("preloader").style.display = "none";
-                initAnimations();
-                return;
-            }
+                    if (!window.gsap) {
+                        document.getElementById("preloader").style.display = "none";
+                        initAnimations();
+                        return;
+                    }
 
-            gsap.to("#preloader", {
-                yPercent: -100,
-                duration: 1.2,
-                ease: "expo.inOut",
-                onComplete: () => {
-                    document.getElementById("preloader").style.display = "none";
-                    initAnimations();
-                }
-            });
-        }, remainingTime);
-    };
+                    gsap.to("#preloader", {
+                        yPercent: -100,
+                        duration: 1.2,
+                        ease: "expo.inOut",
+                        onComplete: () => {
+                            document.getElementById("preloader").style.display = "none";
+                            initAnimations();
+                        }
+                    });
+                }, remainingTime);
+            };
 
-    finishLoading();
-});
+            finishLoading();
+        });
 
 
         function initAnimations() {
