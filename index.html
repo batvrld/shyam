@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
 
     <!-- CDNs (Deferred for faster parsing) -->
@@ -42,26 +42,33 @@
         :root {
             --bg: #F9F9F7;
             --text: #1A1A1A;
-            --accent: #E63946;
+            --accent: #ff003c;
             --line: rgba(26, 26, 26, 0.15);
             --font-main: 'Inter', 'Noto Sans JP', sans-serif;
+            --font-cyber: 'Orbitron', sans-serif;
             --ease: cubic-bezier(0.23, 1, 0.32, 1);
             --sidebar-w: 80px;
             --transition-speed: 0.6s;
             --nav-grey: #666666;
 
+            /* Frame Variables */
+            --frame-margin: clamp(20px, 4vw, 40px);
+            --frame-radius: clamp(20px, 5vw, 40px);
+            --frame-border: 6px;
+
             /* Desktop Overrides */
             --desktop-card-w: 60vh;
-            --desktop-card-h: 50vh;
-            --desktop-card-x: 23.5vh;
-            --desktop-card-y: 26vh;
+            --desktop-card-h: 45vh;
+            --desktop-card-x: 11vh;
+            --desktop-card-y: 21vh;
         }
 
         /* Default Dark Mode Styles */
-        body[data-theme="dark"], body:not([data-theme="light"]) {
+        body[data-theme="dark"],
+        body:not([data-theme="light"]) {
             --bg: #0D0D0D;
             --text: #F9F9F7;
-            --accent: #FF4D5A;
+            --accent: #ff003c;
             --line: rgba(249, 249, 247, 0.15);
             --nav-grey: #AAAAAA;
         }
@@ -70,7 +77,7 @@
         body[data-theme="light"] {
             --bg: #F9F9F7;
             --text: #1A1A1A;
-            --accent: #E63946;
+            --accent: #ff003c;
             --line: rgba(26, 26, 26, 0.15);
             --nav-grey: #666666;
         }
@@ -80,8 +87,11 @@
                 --sidebar-w: 70px;
                 --mobile-card-w: 29vh;
                 --mobile-card-h: 30vh;
-                --mobile-card-x: 20px;
+                --mobile-card-x: -12px;
                 --mobile-card-y: 20px;
+                --frame-margin: 12px;
+                --frame-radius: 20px;
+                --frame-border: 5px;
             }
         }
 
@@ -92,53 +102,60 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        @media (max-width: 768px) {
-            .theme-toggle {
-                margin-bottom: 150px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                height: 100svh;
-                box-sizing: border-box;
-                overflow: hidden;
-            }
-        }
-
         body {
             background-color: var(--bg);
             color: var(--text);
             font-family: var(--font-main);
-            overflow-x: hidden;
+            overflow: hidden; 
             line-height: 1.4;
             transition: background-color var(--transition-speed) var(--ease), color var(--transition-speed) var(--ease);
+            height: 100vh;
+            width: 100vw;
         }
 
-        /* Preloader Styles */
-        #preloader {
+        /* STRICT: No system cursor on desktop */
+        @media (hover: hover) and (pointer: fine) {
+            html, body, *, *::before, *::after, a, button {
+                cursor: none !important;
+            }
+        }
+
+        /* ===== FRAME SYSTEM ===== */
+        .frame {
             position: fixed;
-            inset: 0;
-            background: #0d0d0d;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100vw - (var(--frame-margin) * 2));
+            height: calc(100vh - (var(--frame-margin) * 2));
+            border: var(--frame-border) solid var(--text);
+            border-radius: var(--frame-radius);
+            background-color: var(--bg);
             overflow: hidden;
+            box-sizing: border-box;
+            z-index: 50;
+            transition: border-color var(--transition-speed) var(--ease), background-color var(--transition-speed) var(--ease);
         }
 
-        .loader-text {
-            font-size: 30rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            margin-left: 8em;
+        .scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            scrollbar-width: none; 
         }
 
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ===== NAVIGATION (FIXED WITHIN FRAME) ===== */
         nav {
-            position: fixed;
+            position: fixed; 
             left: 0;
             top: 0;
-            height: 100vh;
+            height: 100%;
             width: var(--sidebar-w);
             border-right: 1px solid var(--line);
             z-index: 1000;
@@ -148,7 +165,13 @@
             align-items: center;
             justify-content: space-between;
             padding: 30px 0;
-            transition: background-color var(--transition-speed) var(--ease);
+            transition: background-color var(--transition-speed) var(--ease), border-color var(--transition-speed) var(--ease);
+        }
+
+        main {
+            margin-left: var(--sidebar-w);
+            width: calc(100% - var(--sidebar-w));
+            position: relative;
         }
 
         .nav-logo {
@@ -167,7 +190,6 @@
 
         .nav-item {
             position: relative;
-            cursor: pointer;
             width: 42px;
             height: 42px;
             display: flex;
@@ -179,6 +201,32 @@
             color: var(--nav-grey);
             transition: all 0.3s var(--ease);
             outline: none;
+        }
+
+        @media (min-width: 1025px) {
+            .nav-item::after {
+                content: attr(data-label);
+                position: absolute;
+                left: calc(100% + 15px);
+                font-size: 0.65rem;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                background: var(--text);
+                color: var(--bg);
+                padding: 6px 12px;
+                border-radius: 4px;
+                opacity: 0;
+                transform: translateX(-10px);
+                transition: all 0.3s var(--ease);
+                pointer-events: none;
+                white-space: nowrap;
+            }
+
+            .nav-item:hover::after {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .nav-item i {
@@ -199,7 +247,6 @@
         }
 
         .theme-toggle {
-            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -231,31 +278,37 @@
             transition: transform 0.4s var(--ease);
         }
 
-        /* Thumb position for Dark Mode (Default) */
-        body[data-theme="dark"] .toggle-thumb, body:not([data-theme="light"]) .toggle-thumb {
+        body[data-theme="dark"] .toggle-thumb,
+        body:not([data-theme="light"]) .toggle-thumb {
             transform: translateY(150%);
             background: var(--accent);
         }
 
-        /* Thumb position for Light Mode */
         body[data-theme="light"] .toggle-thumb {
             transform: translateY(0%);
             background: var(--text);
         }
+        @media (max-width: 768px){
 
-        main {
-            margin-left: var(--sidebar-w);
-            width: calc(100vw - var(--sidebar-w));
-        }
+  nav{
+    padding: 20px 0; /* slightly tighter spacing */
+  }
 
+  .theme-toggle{
+    margin-bottom: 150px; /* move it up safely */
+  }
+
+}
         section {
-            min-height: 100vh;
+            min-height: calc(100vh - (var(--frame-margin) * 2));
             position: relative;
             padding: 10vh 8vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
             border-bottom: 1px solid var(--line);
+            width: 100%;
+            max-width: 100%;
         }
 
         .hero-container {
@@ -296,7 +349,7 @@
             display: flex;
             flex-direction: column;
             gap: 40px;
-            padding: 15vh 0;
+            padding: 10vh 0;
             border-bottom: 1px solid var(--line);
         }
 
@@ -338,7 +391,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(0);
             transition: filter 0.6s var(--ease);
         }
 
@@ -367,7 +419,7 @@
         }
 
         .grid-line {
-            position: fixed;
+            position: absolute;
             top: 0;
             bottom: 0;
             width: 1px;
@@ -380,19 +432,29 @@
             font-size: 15vw;
             position: absolute;
             right: 5vw;
-            top: 5vh;
+            top: -3vh;
             color: var(--line);
             font-family: 'Noto Sans JP';
             font-weight: 700;
             pointer-events: none;
         }
-
-        h1 {
-            font-size: clamp(3rem, 10vw, 8rem);
-            font-weight: 700;
-            line-height: 0.9;
-            letter-spacing: -0.04em;
+        @media (max-width: 768px) {
+            .kanji-bg {
+                font-size: 15vw;
+                top: 2vh;
+                right: 5vw;
+            }
+        }
+        /* Unique Cyber Font for Hero Title */
+        h1.reveal-text {
+            font-family: var(--font-cyber);
+            font-size: clamp(2.5rem, 9vw, 7.5rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
             z-index: 10;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 77, 90, 0.1);
         }
 
         .about-meta {
@@ -455,13 +517,14 @@
             }
         }
 
-        /* ===== CURSOR ===== */
+        /* ===== CUSTOM CURSOR (DESKTOP ONLY) ===== */
+        #cp-cursor {
+            display: none;
+        }
+
         @media (hover: hover) and (pointer: fine) {
-            *, *::before, *::after, a, button, input, textarea, select, option, label {
-                cursor: none !important;
-            }
-            html, body { cursor: none !important; }
             #cp-cursor {
+                display: block;
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -506,40 +569,18 @@
                 opacity: 0;
                 mix-blend-mode: difference;
                 text-shadow: 2px 0 red, -2px 0 cyan;
-                animation: glitch-anim 0.18s infinite;
+                animation: glitch-cursor 0.18s infinite;
             }
             body.cp-hover .cursor-ring { transform: translate(-50%, -50%) scale(1.6); border-color: #ff003c; }
             body.cp-hover .cursor-text { opacity: 1; }
         }
 
-        @keyframes glitch-anim {
+        @keyframes glitch-cursor {
             0% { transform: translateX(-50%) translate(0); }
             25% { transform: translateX(-50%) translate(-1px, 1px); }
             50% { transform: translateX(-50%) translate(1px, -1px); }
             100% { transform: translateX(-50%) translate(0); }
         }
-
-        .loader-text {
-            font-family: 'Noto Sans JP', monospace;
-            font-size: 0.8rem;
-            letter-spacing: 0.35em;
-            color: #00fff7;
-            position: relative;
-            text-transform: uppercase;
-            animation: glitch-anim 0.18s infinite;
-        }
-
-        .loader-text::before, .loader-text::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            opacity: 0.75;
-        }
-
-        .loader-text::before { color: #ff003c; transform: translate(1px, 0); clip-path: inset(0 0 60% 0); }
-        .loader-text::after { color: #00e5ff; transform: translate(-1px, 0); clip-path: inset(40% 0 0 0); }
 
         :root {
             --btn-bg: #fff;
@@ -569,19 +610,13 @@
             background: var(--btn-bg);
             border-radius: 999px;
             border: 1px solid var(--btn-border);
-            cursor: pointer;
             text-decoration: none;
             position: relative;
             overflow: hidden;
             transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-            width: 15.4vh;
+            width: fit-content;
         }
-        @media (max-width: 768px) {
-            .visit-btn {
-                width: 12.5vh;
-                padding: 12px 20px;
-            }
-        }
+
         .visit-btn::after {
             content: "↗";
             font-size: 1rem;
@@ -599,83 +634,78 @@
 </head>
 
 <body data-theme="dark">
+
+    <!-- CURSOR WRAPPER -->
     <div id="cp-cursor">
         <div class="cursor-dot"></div>
         <div class="cursor-ring"></div>
         <div class="cursor-text">クリック</div>
     </div>
 
-    <!-- PRELOADER -->
-    <div id="preloader">
-        <div class="loader-text" id="loader-text" data-text="INITIALIZING">INITIALIZING</div>
-    </div>
-
-    <div class="grid-line" style="left: 25vw;"></div>
-    <div class="grid-line" style="left: 50vw;"></div>
-    <div class="grid-line" style="left: 75vw;"></div>
-
-    <nav>
-        <div class="nav-logo">SHYAM</div>
-        <div class="nav-links">
-            <button class="nav-item active" data-section="hero" title="Home"><i data-lucide="home"></i></button>
-            <button class="nav-item" data-section="about" title="About"><i data-lucide="user"></i></button>
-            <button class="nav-item" data-section="projects" title="Works"><i data-lucide="layers"></i></button>
-            <button class="nav-item" data-section="contact" title="Contact"><i data-lucide="mail"></i></button>
-        </div>
-        <button class="theme-toggle" id="theme-toggle">
-            <span style="font-size: 0.6rem; writing-mode: vertical-rl; margin-bottom: 5px; opacity: 0.6;color: #666666;">MODE</span>
-            <div class="toggle-track">
-                <div class="toggle-thumb"></div>
+    <div class="frame">
+        <nav>
+            <div class="nav-logo">SHYAM</div>
+            <div class="nav-links">
+                <button class="nav-item active" data-section="hero" data-label="HOME" title="Home"><i data-lucide="home"></i></button>
+                <button class="nav-item" data-section="about" data-label="ABOUT" title="About"><i data-lucide="user"></i></button>
+                <button class="nav-item" data-section="projects" data-label="WORKS" title="Works"><i data-lucide="layers"></i></button>
+                <button class="nav-item" data-section="contact" data-label="CONTACT" title="Contact"><i data-lucide="mail"></i></button>
             </div>
-        </button>
-    </nav>
-
-    <main>
-        <section id="hero">
-            <div class="kanji-bg">開発者</div>
-            <span class="about-meta">YOO!</span>
-            <div class="hero-container">
-                <h1 class="reveal-text">I'M<br>SHYAM</h1>
-                <div class="profile-card">
-                    <img src="shyam.png" alt="Profile" class="profile-img">
+            <button class="theme-toggle" id="theme-toggle">
+                <span style="font-size: 0.6rem; writing-mode: vertical-rl; margin-bottom: 5px; opacity: 0.6; color: #666666;">MODE</span>
+                <div class="toggle-track">
+                    <div class="toggle-thumb"></div>
                 </div>
-            </div>
-            <p style="max-width: 400px; margin-top: 40px; font-weight: 300;">DEVELOPING HIGH-PERFORMANCE, RESPONSIVE,
-                AND INNOVATIVE WEB EXPERIENCES.<br><br>
-                高性能、応答性に優れた革新的なウェブエクスペリエンスの開発</p>
-        </section>
+            </button>
+        </nav>
+        
+        <div class="scroll-container" id="main-scroll">
+            <main>
+                <div class="grid-line" style="left: 25%;"></div>
+                <div class="grid-line" style="left: 50%;"></div>
+                <div class="grid-line" style="left: 75%;"></div>
 
+                <section id="hero">
+                    <div class="kanji-bg">開発者</div>
+                    <span class="about-meta">YOO!</span>
+                    <div class="hero-container">
+                        <h1 class="reveal-text">I'M<br>SHYAM</h1>
+                        <div class="profile-card">
+                            <img src="shyam.png" alt="Profile" class="profile-img" onerror="this.src='https://picsum.photos/seed/shyam/800/1000'">
+                        </div>
+                    </div>
+                    <p style="max-width: 400px; margin-top: 40px; font-weight: 300;">DEVELOPING HIGH-PERFORMANCE, RESPONSIVE, AND INNOVATIVE WEB EXPERIENCES.<br><br>
+                        高性能、応答性に優れた革新的なウェブエクスペリエンスの開発</p>
+                </section>
 
-        <section id="about">
-            <div style="max-width: 800px;">
-                <span class="about-meta">Philosophy</span>
-                <h2 class="reveal-text" style="font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 400; margin-bottom: 30px;">
-                    I build modern web experiences since 2022
-                </h2>
-                <p style="opacity: 0.8; line-height: 1.8;">I'm SHYAM, a dedicated website developer with a passion for
-                    building high-quality, high-performance web applications. I transform ideas into functional,
-                    responsive, and visually appealing online experiences.
-                    I specialize in full-stack development, leveraging technologies like React, Node.js, and modern
-                    databases.</p>
-            </div>
-        </section>
+                <section id="about">
+                    <div style="max-width: 800px;">
+                        <span class="about-meta">Philosophy</span>
+                        <h2 class="reveal-text" style="font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 400; margin-bottom: 30px;">
+                            I build modern web experiences since 2022
+                        </h2>
+                        <p style="opacity: 0.8; line-height: 1.8;">I'm SHYAM, a dedicated website developer with a passion for building high-quality, high-performance web applications. I transform ideas into functional, responsive, and visually appealing online experiences. I specialize in full-stack development, leveraging technologies like React, Node.js, and modern databases.</p>
+                    </div>
+                </section>
 
-        <section id="projects">
-            <span class="about-meta">Portfolio — Selected Projects</span>
-            <div id="projects-container"></div>
-        </section>
+                <section id="projects">
+                    <span class="about-meta">Portfolio — Selected Projects</span>
+                    <div id="projects-container"></div>
+                </section>
 
-        <section id="contact" style="background: var(--text); color: var(--bg);">
-            <span class="about-meta">Connect</span>
-            <h2 class="reveal-text" style="font-size: clamp(2.5rem, 8vw, 7rem);">GET IN<br>TOUCH.</h2>
-            <div class="social-rail">
-                <a href="https://wa.me/8667697886" target="_blank" class="social-link"><span class="social-label">Message</span><span class="social-name">WHATSAPP↗</span></a>
-                <a href="https://www.instagram.com/batvrld" target="_blank" class="social-link"><span class="social-label">Social</span><span class="social-name">INSTAGRAM↗</span></a>
-                <a href="https://www.linkedin.com/in/shyam-santhosh-27386a354/" target="_blank" class="social-link"><span class="social-label">Network</span><span class="social-name">LINKEDIN↗</span></a>
-                <a href="mailto:shyamsantox@gmail.com" class="social-link"><span class="social-label">Direct</span><span class="social-name">MAIL↗</span></a>
-            </div>
-        </section>
-    </main>
+                <section id="contact" style="background: var(--text); color: var(--bg);">
+                    <span class="about-meta">Connect</span>
+                    <h2 class="reveal-text" style="font-size: clamp(2.5rem, 8vw, 7rem);">GET IN<br>TOUCH.</h2>
+                    <div class="social-rail">
+                        <a href="https://wa.me/8667697886" target="_blank" class="social-link"><span class="social-label">Message</span><span class="social-name">WHATSAPP↗</span></a>
+                        <a href="https://www.instagram.com/batvrld" target="_blank" class="social-link"><span class="social-label">Social</span><span class="social-name">INSTAGRAM↗</span></a>
+                        <a href="https://www.linkedin.com/in/shyam-santhosh-27386a354/" target="_blank" class="social-link"><span class="social-label">Network</span><span class="social-name">LINKEDIN↗</span></a>
+                        <a href="mailto:shyamsantox@gmail.com" class="social-link"><span class="social-label">Direct</span><span class="social-name">MAIL↗</span></a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
 
     <script>
         const projectData = [
@@ -726,43 +756,29 @@
         });
         container.innerHTML = projectHTML;
 
-        // PRELOADER LOGIC
-        const loader = document.getElementById("loader-text");
-        const messages = ["LOADING","読み込み中", "LOADING", "読み込み中", "LOADING", "読み込み中", "LOADING"];
-        let msgIndex = 0;
-
-        function glitchEffect(text) {
-            const chars = "!<>-_\\/[]{}—=+*^?#________";
-            let iterations = 0;
-            const interval = setInterval(() => {
-                loader.textContent = text.split("").map((char, i) => i < iterations ? char : chars[Math.floor(Math.random() * chars.length)]).join("");
-                loader.setAttribute("data-text", loader.textContent);
-                if (iterations >= text.length) clearInterval(interval);
-                iterations += 1 / 3;
-            }, 30);
-        }
-
-        const msgInterval = setInterval(() => {
-            glitchEffect(messages[msgIndex]);
-            msgIndex = (msgIndex + 1) % messages.length;
-        }, 800);
-
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
-            // Cursor
+            // Desktop-only Cursor logic
             if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
                 const cursor = document.getElementById("cp-cursor");
-                const ring = cursor.querySelector(".cursor-ring");
                 const text = cursor.querySelector(".cursor-text");
                 const words = ["クリック", "CLICK", "EXEC", "RUN", "押す"];
+                
                 document.addEventListener("mousemove", e => {
                     cursor.style.left = e.clientX + "px";
                     cursor.style.top = e.clientY + "px";
                 });
-                setInterval(() => { text.textContent = words[Math.floor(Math.random() * words.length)]; }, 140);
+                
+                setInterval(() => { 
+                    text.textContent = words[Math.floor(Math.random() * words.length)]; 
+                }, 140);
+
                 document.addEventListener("mouseover", e => {
-                    if (e.target.closest("a, button, .nav-item, .visit-btn")) document.body.classList.add("cp-hover");
-                    else document.body.classList.remove("cp-hover");
+                    if (e.target.closest("a, button, .nav-item, .visit-btn, .theme-toggle, .social-link")) {
+                        document.body.classList.add("cp-hover");
+                    } else {
+                        document.body.classList.remove("cp-hover");
+                    }
                 });
             }
 
@@ -774,49 +790,26 @@
             };
 
             if (window.lucide) lucide.createIcons();
+            
+            // Start animations immediately since loader is removed
+            initAnimations();
         });
-
-        // HANDLE EXIT (Force 5 Seconds)
-        window.addEventListener('load', () => {
-            const startTime = Date.now();
-            const minLoadTime = 5000;
-
-            const finishLoading = () => {
-                const remainingTime = Math.max(0, minLoadTime - (Date.now() - startTime));
-
-                setTimeout(() => {
-                    clearInterval(msgInterval);
-                    glitchEffect("ACCESS GRANTED");
-
-                    if (!window.gsap) {
-                        document.getElementById("preloader").style.display = "none";
-                        initAnimations();
-                        return;
-                    }
-
-                    gsap.to("#preloader", {
-                        yPercent: -100,
-                        duration: 1.2,
-                        ease: "expo.inOut",
-                        onComplete: () => {
-                            document.getElementById("preloader").style.display = "none";
-                            initAnimations();
-                        }
-                    });
-                }, remainingTime);
-            };
-
-            finishLoading();
-        });
-
 
         function initAnimations() {
             if (window.Lenis && window.gsap) {
-                const lenis = new Lenis({ lerp: 0.1 });
+                const scrollEl = document.getElementById('main-scroll');
+                const lenis = new Lenis({ 
+                    wrapper: scrollEl,
+                    content: scrollEl,
+                    lerp: 0.1 
+                });
+                
                 function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
                 requestAnimationFrame(raf);
 
                 gsap.registerPlugin(ScrollTrigger);
+                ScrollTrigger.defaults({ scroller: "#main-scroll" });
+
                 document.querySelectorAll('.reveal-text').forEach(el => {
                     const split = new SplitType(el, { types: 'lines' });
                     gsap.from(split.lines, {
@@ -848,6 +841,156 @@
             }
         }
     </script>
+    <!-- ===== CYBER SHUTTER LOADER ===== -->
+<style>
+#cp-loader{
+  position:fixed;
+  inset:0;
+  z-index:9999999;
+  overflow:hidden;
+  font-family:'Orbitron','Noto Sans JP',sans-serif;
+}
+
+/* top & bottom shutters */
+.cp-shutter{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:50%;
+  background:#000;
+  transition:transform 1s cubic-bezier(.77,0,.18,1);
+  z-index:2;
+}
+
+.cp-shutter.top{
+  top:0;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.cp-shutter.bottom{
+  bottom:0;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
+
+/* text in center */
+.cp-loader-center{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3;
+  pointer-events:none;
+}
+
+.cp-loader-text{
+  font-size:clamp(2.5rem,7vw,5rem);
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:#00fff7;
+  position:relative;
+  animation:engine .05s infinite;
+}
+
+/* RGB glitch */
+.cp-loader-text::before,
+.cp-loader-text::after{
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  top:0;
+  opacity:.8;
+}
+
+.cp-loader-text::before{
+  color:#ff003c;
+  transform:translate(-3px,-2px);
+  mix-blend-mode:screen;
+}
+
+.cp-loader-text::after{
+  color:#00fff7;
+  transform:translate(3px,2px);
+  mix-blend-mode:screen;
+}
+
+/* vibration */
+@keyframes engine{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(-2px,1px)}
+  50%{transform:translate(2px,-1px)}
+  75%{transform:translate(-1px,-2px)}
+  100%{transform:translate(1px,2px)}
+}
+
+/* shutter open animation */
+#cp-loader.open .top{
+  transform:translateY(-100%);
+}
+#cp-loader.open .bottom{
+  transform:translateY(100%);
+}
+
+/* cyber selection */
+::selection{
+  background:#ff003c;
+  color:#000;
+  text-shadow:2px 0 #00fff7,-2px 0 #ff003c;
+}
+::-moz-selection{
+  background:#ff003c;
+  color:#000;
+}
+</style>
+
+<div id="cp-loader">
+  <div class="cp-shutter top"></div>
+  <div class="cp-shutter bottom"></div>
+
+  <div class="cp-loader-center">
+    <div class="cp-loader-text" data-text="LOADING">LOADING</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const loader=document.getElementById("cp-loader");
+  const text=loader.querySelector(".cp-loader-text");
+
+  const sequence=[
+    {word:"LOADING", duration:1500},
+    {word:"起動中", duration:1500}
+  ];
+
+  let step=0;
+
+  function showNext(){
+    if(step < sequence.length){
+      const current=sequence[step];
+      text.textContent=current.word;
+      text.setAttribute("data-text",current.word);
+      step++;
+      setTimeout(showNext,current.duration);
+    }else{
+      // instantly remove text
+      text.style.display="none";
+
+      // trigger shutter
+      loader.classList.add("open");
+
+      // remove loader after animation
+      setTimeout(()=>{
+        loader.remove();
+      },1100);
+    }
+  }
+
+  window.addEventListener("load",()=>{
+    showNext();
+  });
+})();
+</script>
+<!-- ===== END SHUTTER LOADER ===== -->
 </body>
 
 </html>
