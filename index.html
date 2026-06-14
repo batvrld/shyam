@@ -40,19 +40,16 @@
     </script>
 
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
 
-    <!-- CDNs (Deferred for faster parsing) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js" defer></script>
     <script src="https://unpkg.com/split-type" defer></script>
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <link rel="icon" href="/favicon.ico?v=69">
 
@@ -388,26 +385,21 @@
         }
 
         .project-img-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #222;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: 28px;
-    transform: translateZ(0);
-}
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #222;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            transform: translateZ(0);
+        }
 
-.project-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-}
         .project-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: inherit;
             transition: filter 0.6s var(--ease);
         }
 
@@ -652,8 +644,8 @@
 
 <body data-theme="dark">
 
-    <!-- CURSOR WRAPPER -->
     <div id="cp-cursor">
+        <canvas id="slash-canvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: -1;"></canvas>
         <div class="cursor-dot"></div>
         <div class="cursor-ring"></div>
         <div class="cursor-text">クリック</div>
@@ -783,9 +775,15 @@
                 const text = cursor.querySelector(".cursor-text");
                 const words = ["クリック", "CLICK", "EXEC", "RUN", "押す"];
                 
+                let points = [];
+                const MAX_POINTS = 12;
+
                 document.addEventListener("mousemove", e => {
                     cursor.style.left = e.clientX + "px";
                     cursor.style.top = e.clientY + "px";
+
+                    points.push({ x: e.clientX, y: e.clientY, time: Date.now() });
+                    if (points.length > MAX_POINTS) points.shift();
                 });
                 
                 setInterval(() => { 
@@ -799,6 +797,53 @@
                         document.body.classList.remove("cp-hover");
                     }
                 });
+
+                // --- SHARP DYNAMIC KATANA SLASH LOOP ---
+                const canvas = document.getElementById("slash-canvas");
+                const ctx = canvas.getContext("2d");
+
+                function resizeCanvas() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+                resizeCanvas();
+                window.addEventListener("resize", resizeCanvas);
+
+                function drawSlash() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (points.length > 1) {
+                        ctx.shadowBlur = 0; 
+                        ctx.lineCap = "butt"; 
+                        ctx.lineJoin = "miter"; 
+                        ctx.miterLimit = 4;
+
+                        // Check theme context dynamically to assign core color
+                        const isLightMode = document.body.getAttribute('data-theme') === 'light';
+                        
+                        // Dark Mode = Cyan (#00fff7) | Light Mode = Cyber Red (#ff003c)
+                        const slashRGB = isLightMode ? "255, 0, 60" : "0, 255, 247";
+
+                        for (let i = 1; i < points.length; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(points[i - 1].x, points[i - 1].y);
+                            ctx.lineTo(points[i].x, points[i].y);
+
+                            const progress = i / points.length;
+                            ctx.lineWidth = progress * 4.5; // Tapering geometry
+                            
+                            ctx.strokeStyle = `rgba(${slashRGB}, ${progress})`; 
+                            ctx.stroke();
+                        }
+                    }
+
+                    if (points.length > 0 && Date.now() - points[points.length - 1].time > 35) {
+                        points.shift();
+                    }
+
+                    requestAnimationFrame(drawSlash);
+                }
+                drawSlash();
             }
 
             // Theme Toggle
@@ -860,8 +905,7 @@
             }
         }
     </script>
-    <!-- ===== CYBER SHUTTER LOADER ===== -->
-<style>
+    <style>
 #cp-loader{
   position:fixed;
   inset:0;
@@ -1009,7 +1053,6 @@
   });
 })();
 </script>
-<!-- ===== END SHUTTER LOADER ===== -->
 </body>
 
 </html>
